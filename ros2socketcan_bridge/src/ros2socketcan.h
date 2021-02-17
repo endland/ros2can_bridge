@@ -25,32 +25,12 @@
 #ifndef __ros2_socketcan_H__
 #define __ros2_socketcan_H__
 
-//#include <termios.h> //n
-//#include <fstream> //n
-//#include <sstream>//n
-//#include <chrono>//n
-//#include <iostream>//n
-//#include <stdio.h>
-//#include <stdint.h>
-//#include <stdlib.h>
-//#include <unistd.h>
-//#include <string.h>
-//#include <net/if.h>
-//#include <sys/types.h>
-//#include <sys/socket.h>
-//#include <sys/ioctl.h>
-
-//#include <linux/can.h>
 #include <linux/can/raw.h>
 
 #include <boost/asio.hpp>
-//#include <boost/asio/io_service.hpp>
-//#include <boost/asio/signal_set.hpp>
-//#include <thread>
 
 #include "rclcpp/rclcpp.hpp"
 #include "can_msgs/msg/frame.hpp"
-#include "can_msgs/srv/can_request.hpp"
 
 #include "log.h"
 
@@ -86,7 +66,6 @@ class ros2socketcan : public rclcpp::Node
         rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr publisher_;
         rclcpp::Publisher<can_msgs::msg::Frame>::SharedPtr test_pub_;
         rclcpp::Subscription<can_msgs::msg::Frame>::SharedPtr subscription_;
-        rclcpp::service::Service<can_msgs::srv::CanRequest>::SharedPtr server_ros2can_;
         
         can_msgs::msg::Frame current_frame;
         
@@ -112,14 +91,7 @@ class ros2socketcan : public rclcpp::Node
          */
         void CanListener(struct can_frame& rec_frame, boost::asio::posix::basic_stream_descriptor<>& stream);
         
-        /**
-         * @brief The ros2can_service provides the possibility to send a can message and wait for a specific can message with a give CAN Message ID.
-         */
-        void ros2can_srv(
-        const std::shared_ptr<rmw_request_id_t> /*request_header*/,
-        const std::shared_ptr<can_msgs::srv::CanRequest::Request> request,
-        std::shared_ptr<can_msgs::srv::CanRequest::Response> response);
-        
+       
         /**
          * @biref The Stop method is needed as the interuped handler must be configered to the asio libary.
          */
