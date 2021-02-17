@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(can_msgs)
+project(can_msg)
 
 if(NOT WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -Wextra")
@@ -12,9 +12,15 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(geometry_msgs             REQUIRED)
 find_package(std_msgs                  REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
+set(msg_files
   "msg/Frame.msg"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
   DEPENDENCIES builtin_interfaces  geometry_msgs std_msgs
 )
+
+ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()
