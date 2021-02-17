@@ -20,9 +20,9 @@ void ros2socketcan::Init(const char* can_socket)
       
     rclcpp::executors::MultiThreadedExecutor exec;
     
-    publisher_ 		= this->create_publisher<can_msgs::msg::Frame>(topicname_receive.str());
-    test_pub_ 		= this->create_publisher<can_msgs::msg::Frame>(topicname_transmit.str());
-    subscription_ 	= this->create_subscription<can_msgs::msg::Frame>(topicname_transmit.str(), std::bind(&ros2socketcan::CanPublisher, this, _1));
+    publisher_ 		= this->create_publisher<can_msgs::msg::Frame>(topicname_receive.str(), 10);
+    test_pub_ 		= this->create_publisher<can_msgs::msg::Frame>(topicname_transmit.str(), 10);
+    subscription_ 	= this->create_subscription<can_msgs::msg::Frame>(topicname_transmit.str(), 10, std::bind(&ros2socketcan::CanPublisher, this, _1));
     
     strcpy(ifr.ifr_name, can_socket);
     ioctl(natsock, SIOCGIFINDEX, &ifr);
@@ -61,7 +61,10 @@ void ros2socketcan::stop()
     signals.clear();
 }
 
-ros2socketcan::~ros2socketcan(){printf("\nEnd of Publisher Thread. \n");}
+ros2socketcan::~ros2socketcan()
+{
+    printf("\nEnd of Publisher Thread. \n");
+}
 
 void ros2socketcan::CanSend(const can_msgs::msg::Frame msg)
 {
